@@ -1,30 +1,54 @@
 using UnityEngine;
 
-[ExecuteInEditMode] // Esto permite verlo en el editor sin darle a Play
-public class OrbitLine : MonoBehaviour
+[ExecuteInEditMode]
+[RequireComponent(typeof(LineRenderer))]
+public class OrbitLinePlaneta : MonoBehaviour
 {
-    public LineRenderer lineRenderer;
-    public Transform centro; // Aquí arrastra tu SOL
-    public float radio = 10f;
-    [Range(10, 100)] public int segmentos = 50; // Calidad del círculo
+    private LineRenderer lineRenderer;
+    public Transform centro;
+
+    [Range(30, 200)] public int segmentos = 100;
+    public float anchoLinea = 0.07f;
+
+    void Start()
+    {
+        lineRenderer = GetComponent<LineRenderer>();
+
+        if (centro == null)
+        {
+            GameObject solGo = GameObject.FindWithTag("Sun");
+            if (solGo != null) centro = solGo.transform;
+        }
+
+        lineRenderer.useWorldSpace = true;
+        lineRenderer.startWidth = anchoLinea;
+        lineRenderer.endWidth = anchoLinea;
+
+        
+        lineRenderer.numCornerVertices = 5;
+        lineRenderer.numCapVertices = 5;
+    }
 
     void Update()
     {
-        DibujaCiclo();
+        if (centro != null)
+        {
+            DibujaOrbita();
+        }
     }
 
-    void DibujaCiclo()
+    void DibujaOrbita()
     {
         lineRenderer.positionCount = segmentos + 1;
-        float angulo = 0f;
 
+        float radioActual = Vector3.Distance(transform.position, centro.position);
+
+        float angulo = 0f;
         for (int i = 0; i <= segmentos; i++)
         {
-            // Calculamos la posición X y Z usando Seno y Coseno
-            float x = Mathf.Sin(Mathf.Deg2Rad * angulo) * radio;
-            float z = Mathf.Cos(Mathf.Deg2Rad * angulo) * radio;
+            float x = Mathf.Sin(Mathf.Deg2Rad * angulo) * radioActual;
+            float z = Mathf.Cos(Mathf.Deg2Rad * angulo) * radioActual;
 
-            // La posición es relativa al centro (el Sol)
             Vector3 punto = new Vector3(x, 0f, z) + centro.position;
 
             lineRenderer.SetPosition(i, punto);
