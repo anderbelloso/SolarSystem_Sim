@@ -8,6 +8,8 @@ public class OrbitaPlaneta : MonoBehaviour
 
     private float velocidadOrbital;
 
+    public static float multiplicadorGlobal = 1f;
+
     // Velocidades orbitales relativas (Tierra = 1)
     public enum TipoPlaneta
     {
@@ -57,6 +59,7 @@ public class OrbitaPlaneta : MonoBehaviour
 
     void Update()
     {
-        transform.RotateAround(sol.position, ejeRotacion, velocidadOrbital * Time.deltaTime);
+        float velocidadFinal = velocidadOrbital * multiplicadorGlobal;
+        transform.RotateAround(sol.position, ejeRotacion, velocidadFinal * Time.deltaTime);
     }
 }

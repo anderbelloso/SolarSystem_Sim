@@ -8,7 +8,7 @@ public class OrbitLinePlaneta : MonoBehaviour
     public Transform centro;
 
     [Range(30, 200)] public int segmentos = 100;
-    public float anchoLinea = 0.07f;
+    public float anchoLinea = 0.1f;
 
     void Start()
     {
